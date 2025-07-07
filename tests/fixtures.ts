@@ -15,6 +15,7 @@ export interface TestSiteConfig {
   params?: string;
   indexContent?: string;
   aboutContent?: string;
+  searchContent?: string;
   images?: string[]; // Array of image names to create
 }
 
@@ -95,11 +96,25 @@ export async function createTestSite(config: TestSiteConfig = {}): Promise<TestS
     title: 'Theme Test Site',
   };
 
+  // Base Hugo config
   const hugoConfig = Object.entries(defaultConfig)
     .map(([key, value]) => `${key} = "${value}"`)
     .join('\n');
 
-  fs.writeFileSync(path.join(tmpDir, 'config', '_default', 'hugo.toml'), hugoConfig);
+  // Add search index configuration
+  const searchConfig = `
+[outputFormats]
+  [outputFormats.SearchIndex]
+    mediaType = "application/json"
+    baseName = "search-index"
+    isPlainText = true
+    notAlternative = true
+
+[outputs]
+  home = ["HTML", "RSS", "SearchIndex"]
+`;
+
+  fs.writeFileSync(path.join(tmpDir, 'config', '_default', 'hugo.toml'), hugoConfig + searchConfig);
 
   // Write params.toml if provided
   if (config.params) {
@@ -122,6 +137,14 @@ export async function createTestSite(config: TestSiteConfig = {}): Promise<TestS
   if (config.aboutContent) {
     fs.writeFileSync(path.join(tmpDir, 'content', 'about.md'), config.aboutContent);
   }
+
+  // Create search page content (always create for search tests)
+  const searchContent = config.searchContent || `+++
+title = "Search"
+layout = "search"
++++
+`;
+  fs.writeFileSync(path.join(tmpDir, 'content', 'search.md'), searchContent);
 
   // Create test images if provided
   if (config.images) {
