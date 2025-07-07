@@ -7,3 +7,6 @@ hugo_stats.json
 .DS_Store
 Thumbs.db
 resources/_gen/
+
+# Playwright
+test-results/
