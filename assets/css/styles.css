@@ -443,3 +443,100 @@ audio::-webkit-media-controls-enclosure {
 audio::-webkit-media-controls-panel {
   background-color: var(--link-color);
 }
+
+/* ==========================================================================
+   SEARCH FORM
+   ========================================================================== */
+
+.search-form {
+  margin-bottom: 2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--link-color);
+}
+
+.search-input::placeholder {
+  color: #6c757d;
+}
+
+/* Dark mode adjustments */
+body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-input {
+  border-color: #404040;
+}
+
+@media (prefers-color-scheme: dark) {
+  .search-input {
+    border-color: #404040;
+  }
+}
+
+/* ==========================================================================
+   SEARCH RESULTS
+   ========================================================================== */
+
+.search-results {
+  margin-top: 1.5rem;
+}
+
+.search-result {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.search-result:last-child {
+  border-bottom: none;
+}
+
+.search-result-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.search-result-title a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.search-result-title a:hover {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.search-result-url {
+  font-size: 14px;
+  color: var(--link-color);
+  margin: 0 0 0.5rem;
+}
+
+.search-result-excerpt {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Dark mode adjustments */
+body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-result {
+  border-bottom-color: #2a2a2a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .search-result {
+    border-bottom-color: #2a2a2a;
+  }
+}
