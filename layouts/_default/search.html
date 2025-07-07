@@ -1,7 +1,47 @@
 {{ define "main" }}
 <div class="container page">
     <h1>Search</h1>
-    <p>Search functionality is coming soon!</p>
-    <p>We're working on implementing a new search system. Please check back later.</p>
+    
+    <!-- Search Form -->
+    <form class="search-form">
+        <input 
+            type="search" 
+            id="search-input" 
+            name="q" 
+            placeholder="Search artists, albums, songs, and more..." 
+            class="search-input"
+        >
+    </form>
+    
+    <!-- Search Results Container -->
+    <section id="search-results" class="search-results" aria-live="polite">
+        <!-- Results will be populated here via JavaScript -->
+    </section>
+    
+    <!-- Result Template (hidden, for JavaScript use) -->
+    <template id="search-result-template">
+        <article class="search-result">
+            <header class="search-result-header">
+                <h2 class="search-result-title">
+                    <a href="" class="search-result-link"></a>
+                </h2>
+                <p class="search-result-url"></p>
+            </header>
+            <div class="search-result-content">
+                <p class="search-result-excerpt"></p>
+            </div>
+        </article>
+    </template>
+    
+    <!-- Fallback content for users without JavaScript -->
+    <noscript>
+        <p>Search functionality is coming soon!</p>
+        <p>We're working on implementing a new search system. Please check back later.</p>
+    </noscript>
+    
+    <!-- Search Engine JavaScript -->
+    {{ with resources.Get "scripts/search.ts" | js.Build -}}
+    <script src="{{ .RelPermalink }}"></script>
+    {{- end }}
 </div>
 {{ end }}
