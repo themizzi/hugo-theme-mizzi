@@ -8,9 +8,11 @@
     "test:ui": "playwright test --ui"
   },
   "devDependencies": {
-     "@playwright/test": "^1.53.1",
-     "get-port": "^7.1.0",
-     "@types/node": "24.0.3",
-     "typescript": "^5.7.3"
+    "@playwright/test": "^1.53.1",
+    "@types/json-to-pretty-yaml": "^1.2.1",
+    "@types/node": "24.0.3",
+    "get-port": "^7.1.0",
+    "json-to-pretty-yaml": "^1.2.2",
+    "typescript": "^5.7.3"
   }
 }

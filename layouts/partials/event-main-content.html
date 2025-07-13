@@ -46,12 +46,19 @@
     {{ with $page.GetTerms "locations" }}
         {{ range . }}
             {{ $locationName = .Title }}
-            {{ $locationAddress = .Params.address }}
-            {{ $locationCity = .Params.city }}
-            {{ $locationState = .Params.state }}
-            {{ $locationZip = .Params.zip }}
             {{ $locationLink = .RelPermalink }}
-            {{ $hasLocationTaxonomy = true }}
+            {{ if $locationName }}
+            <p>🏛️ <span itemprop="name">
+                {{ if $hasLocationTaxonomy }}
+                    <a href="{{ $locationLink }}">{{ $locationName }}</a>
+                {{ else }}
+                    {{ $locationName }}
+                {{ end }}
+            </span></p>
+            {{ end }}
+            <span class="pinned-address">
+                {{ partial "postal-address.html" . }}
+            </span>
         {{ end }}
     {{ else }}
         {{ with $page.Params.location }}
@@ -61,21 +68,27 @@
         {{ $locationCity = $page.Params.city }}
         {{ $locationState = $page.Params.state }}
         {{ $locationZip = $page.Params.zip }}
-    {{ end }}
-    
-    {{ if $locationName }}
-    <p>🏛️ <span itemprop="name">
-        {{ if $hasLocationTaxonomy }}
-            <a href="{{ $locationLink }}">{{ $locationName }}</a>
-        {{ else }}
-            {{ $locationName }}
+        {{ if $locationName }}
+        <p>🏛️ <span itemprop="name">
+            {{ if $hasLocationTaxonomy }}
+                <a href="{{ $locationLink }}">{{ $locationName }}</a>
+            {{ else }}
+                {{ $locationName }}
+            {{ end }}
+        </span></p>
         {{ end }}
-    </span></p>
-    {{ end }}
-    
-    {{ if and $locationAddress $locationCity $locationState $locationZip }}
-    {{ $address := printf "%s, %s, %s %s" $locationAddress $locationCity $locationState $locationZip }}
-    <p>📍 <a href="https://www.google.com/maps/search/?api=1&query={{ $address | urlquery }}" target="_blank" itemprop="address">{{ $address }}</a></p>
+        
+        {{ if and $locationAddress $locationCity $locationState $locationZip }}
+        {{ $address := printf "%s, %s, %s %s" $locationAddress $locationCity $locationState $locationZip }}
+        <p>📍
+          <a href="https://www.google.com/maps/search/?api=1&query={{ $address | urlquery }}" target="_blank" itemprop="address">
+            <span itemprop="streetAddress">{{ $locationAddress }}</span>, 
+            <span itemprop="addressLocality">{{ $locationCity }}</span>, 
+            <span itemprop="addressRegion">{{ $locationState }}</span> 
+            <span itemprop="postalCode">{{ $locationZip }}</span>
+          </a>
+        </p>
+        {{ end }}
     {{ end }}
 </span>
 {{ with $page.Params.link }}
