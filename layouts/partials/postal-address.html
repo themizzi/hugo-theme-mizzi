@@ -1,0 +1,52 @@
+{{ define "address-content" }}
+  {{ with .address }}
+  <span itemprop="streetAddress">{{ . }}</span>,
+  {{ end }}
+  {{ with .city }}
+  <span itemprop="addressLocality">{{ . }}</span>,
+  {{ end }}
+  {{ with .state }}
+  <span itemprop="addressRegion">{{ . }}</span>
+  {{ end }}
+  {{ with .zip }}
+  <span itemprop="postalCode">{{ . }}</span>
+  {{ end }}
+{{ end }}
+
+{{ define "address-wrapper" }}
+  {{ if .href }}
+    <a href="{{ .href }}" target="_blank" itemprop="url">
+      {{ template "address-content" .address }}
+    </a>
+  {{ else }}
+    {{ template "address-content" .address }}
+  {{ end }}
+{{ end }}
+
+{{ $address := .Params.address }}
+{{ if not (reflect.IsMap $address) }}
+{{ if or (isset .Params "address") (isset .Params "city") (isset .Params "state") (isset .Params "zip" ) }}
+{{ $address = dict "address" .Params.address "city" .Params.city "state" .Params.state "zip" .Params.zip }}
+{{ if isset .Params "map" }}
+{{ $address = merge $address (dict "map" .Params.map) }}
+{{ end }}
+{{ else }}
+{{ $address = "" }}
+{{ end }}
+{{ end }}
+
+{{ with $address }}
+<address itemscope itemtype="http://schema.org/PostalAddress">
+  {{ $href := "" }}
+  {{ if or (not (isset . "map")) (eq .map "googlemaps") }}
+    {{ $addressParts := slice }}
+    {{ with .address }}{{ $addressParts = $addressParts | append . }}{{ end }}
+    {{ with .city }}{{ $addressParts = $addressParts | append . }}{{ end }}
+    {{ with .state }}{{ $addressParts = $addressParts | append . }}{{ end }}
+    {{ with .zip }}{{ $addressParts = $addressParts | append . }}{{ end }}
+    {{ $mapAddress := delimit $addressParts ", " }}
+    {{ $href = printf "https://www.google.com/maps/search/?api=1&query=%s" ($mapAddress | urlquery) }}
+  {{ end }}
+  {{ template "address-wrapper" (dict "href" $href "address" $address) }}
+</address>
+{{ end }}

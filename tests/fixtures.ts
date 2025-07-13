@@ -5,7 +5,8 @@ import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import getPort from 'get-port';
 import { test as base } from '@playwright/test';
-import { PaginatedPageFixture } from './fixtures/pagination.js';
+import { PaginatedPageFixture } from './fixtures/pagination';
+import { PostalAddressPageFixture } from './fixtures/postal-address';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,6 +44,7 @@ export interface ServerFixture {
 export interface TestFixtures {
   server: ServerFixture;
   paginatedPage: PaginatedPageFixture;
+  postalAddressPage: PostalAddressPageFixture;
 }
 
 // Global cleanup tracking
@@ -72,6 +74,11 @@ export const test = base.extend<TestFixtures>({
   paginatedPage: async ({ page, server }, use) => {
     const paginatedPage = new PaginatedPageFixture(page, server);
     await use(paginatedPage);
+  },
+
+  postalAddressPage: async ({ page, server }, use) => {
+    const postalAddressPage = new PostalAddressPageFixture(page, server);
+    await use(postalAddressPage);
   },
 });
 
