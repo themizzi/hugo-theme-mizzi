@@ -287,6 +287,78 @@ h1:first-child {
   color: var(--link-color);
 }
 
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px;
+  align-items: center;
+}
+
+.pagination-list li {
+  display: flex;
+  align-items: center;
+}
+
+.pagination .pagination-list a,
+.pagination .pagination-list a:link,
+.pagination .pagination-list a:visited {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--link-color);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.pagination .pagination-list a:hover {
+  background-color: #f5f5f5;
+}
+
+/* Dark mode hover state */
+body:has(fieldset.theme-toggle input[value="dark"]:checked) .pagination .pagination-list a:hover {
+  background-color: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+  body .pagination .pagination-list a:hover {
+    background-color: #333;
+  }
+}
+
+.pagination-list .current {
+  display: block;
+  padding: 8px 12px;
+  background-color: var(--link-color);
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.pagination-list .disabled {
+  display: block;
+  padding: 8px 12px;
+  color: var(--breadcrumb-active-color);
+  border-radius: 4px;
+  cursor: default;
+}
+
+.pagination-list .invisible {
+  display: block;
+  padding: 8px 12px;
+  color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* Contact Form */
 .contact-form {
   display: flex;
@@ -316,28 +388,7 @@ h1:first-child {
   height: 20rem;
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-  list-style: none;
-}
-
-.pagination .active a {
-  color: var(--breadcrumb-active-color);
-}
-
-.pagination .disabled a {
-  color: var(--breadcrumb-active-color);
-}
-
-/* ==========================================================================
-   PAGE-SPECIFIC COMPONENTS
-   ========================================================================== */
-
-/* Home Page */
+/* Contact Form */
 .home-container {
   text-align: center;
   max-width: var(--max-content-width);

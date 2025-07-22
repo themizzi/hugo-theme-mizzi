@@ -5,6 +5,7 @@ import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import getPort from 'get-port';
 import { test as base } from '@playwright/test';
+import { PaginatedPageFixture } from './fixtures/pagination.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,9 @@ export interface TestSiteConfig {
   aboutContent?: string;
   searchContent?: string;
   images?: string[]; // Array of image names to create
+  hugoConfig?: string; // Custom Hugo configuration
+  contentFiles?: Record<string, string>; // Additional content files
+  layoutFiles?: Record<string, string>; // Additional layout files
 }
 
 export interface TestSite {
@@ -39,6 +43,7 @@ export interface ServerFixture {
 // Test fixtures
 export interface TestFixtures {
   server: ServerFixture;
+  paginatedPage: PaginatedPageFixture;
 }
 
 // Global cleanup tracking
@@ -63,6 +68,11 @@ export const test = base.extend<TestFixtures>({
     };
 
     await use(serverFixture);
+  },
+
+  paginatedPage: async ({ page, server }, use) => {
+    const paginatedPage = new PaginatedPageFixture(page, server);
+    await use(paginatedPage);
   },
 });
 
@@ -96,8 +106,8 @@ export async function createTestSite(config: TestSiteConfig = {}): Promise<TestS
     title: 'Theme Test Site',
   };
 
-  // Base Hugo config
-  const hugoConfig = Object.entries(defaultConfig)
+  // Use custom Hugo config if provided, otherwise use default
+  const hugoConfigContent = config.hugoConfig || Object.entries(defaultConfig)
     .map(([key, value]) => `${key} = "${value}"`)
     .join('\n');
 
@@ -114,7 +124,7 @@ export async function createTestSite(config: TestSiteConfig = {}): Promise<TestS
   home = ["HTML", "RSS", "SearchIndex"]
 `;
 
-  fs.writeFileSync(path.join(tmpDir, 'config', '_default', 'hugo.toml'), hugoConfig + searchConfig);
+  fs.writeFileSync(path.join(tmpDir, 'config', '_default', 'hugo.toml'), hugoConfigContent + searchConfig);
 
   // Write params.toml if provided
   if (config.params) {
@@ -150,6 +160,27 @@ layout = "search"
   if (config.images) {
     for (const imageName of config.images) {
       createTestImage({ tmpDir, port, cleanup: () => { /* no-op for temporary test site */ } }, imageName);
+    }
+  }
+
+  // Create additional content files if provided
+  if (config.contentFiles) {
+    for (const [relativePath, content] of Object.entries(config.contentFiles)) {
+      const fullPath = path.join(tmpDir, 'content', relativePath);
+      const dir = path.dirname(fullPath);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(fullPath, content);
+    }
+  }
+
+  // Create additional layout files if provided
+  if (config.layoutFiles) {
+    fs.mkdirSync(path.join(tmpDir, 'layouts'), { recursive: true });
+    for (const [relativePath, content] of Object.entries(config.layoutFiles)) {
+      const fullPath = path.join(tmpDir, 'layouts', relativePath);
+      const dir = path.dirname(fullPath);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(fullPath, content);
     }
   }
 

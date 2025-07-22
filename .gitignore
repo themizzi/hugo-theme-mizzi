@@ -8,4 +8,5 @@ hugo_stats.json
 Thumbs.db
 resources/_gen/
 
+# Playwright
 test-results/
