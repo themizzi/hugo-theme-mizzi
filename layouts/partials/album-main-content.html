@@ -36,6 +36,7 @@
 {{ with $page.Resources.Get $page.Params.featured_image }}
     <img src="{{ .RelPermalink }}" alt="{{ .Title }}" />
 {{ end }}
+{{ .Content }}
 {{ with $page.Pages }}
 {{ with where . "Type" "track" }}
 <h2>Tracklist</h2>
