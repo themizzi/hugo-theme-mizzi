@@ -2,8 +2,7 @@
    CSS CUSTOM PROPERTIES & THEME SYSTEM
    ========================================================================== */
 
-body,
-body:has(fieldset.theme-toggle input[value="light"]:checked) {
+body {
   font-family: Poppins, sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -14,6 +13,11 @@ body:has(fieldset.theme-toggle input[value="light"]:checked) {
   --breadcrumb-active-color: #6c757d;
   --background-color: #fff;
   --text-color: #121212;
+  --pagefind-ui-primary: var(--link-color);
+  --pagefind-ui-text: var(--text-color);
+  --pagefind-ui-background: var(--background-color);
+  --pagefind-ui-border: #e0e0e0;
+  --pagefind-ui-tag: #f5f5f5;
   
   /* Layout */
   --padding-size: 20px;
@@ -28,17 +32,12 @@ body:has(fieldset.theme-toggle input[value="light"]:checked) {
   body {
     --background-color: var(--background-color-dark);
     --text-color: var(--text-color-dark);
+    --pagefind-ui-primary: var(--link-color);
+    --pagefind-ui-text: var(--text-color-dark);
+    --pagefind-ui-background: var(--background-color-dark);
+    --pagefind-ui-border: #2a2a2a;
+    --pagefind-ui-tag: #242424;
   }
-}
-
-body:has(fieldset.theme-toggle input[value="dark"]:checked) {
-  --background-color: var(--background-color-dark);
-  --text-color: var(--text-color-dark);
-  --pagefind-ui-primary: var(--pagefind-ui-primary-dark);
-  --pagefind-ui-text: var(--pagefind-ui-text-dark);
-  --pagefind-ui-background: var(--pagefind-ui-background-dark);
-  --pagefind-ui-border: var(--pagefind-ui-border-dark);
-  --pagefind-ui-tag: var(--pagefind-ui-tag-dark);
 }
 
 /* ==========================================================================
@@ -148,19 +147,6 @@ h1:first-child {
   flex-grow: 1;
 }
 
-.main-nav .theme-toggle-wrapper::before,
-.main-nav .theme-toggle-wrapper::after {
-  content: "|";
-}
-
-.main-nav .theme-toggle-wrapper::before {
-  margin-right: 1ch;
-}
-
-.main-nav .theme-toggle-wrapper::after {
-  margin-left: 1ch;
-}
-
 .main-nav .search a[href="/search"]:hover, 
 .main-nav .search a[href="/search"]:focus {
   text-decoration: none;
@@ -234,32 +220,6 @@ h1:first-child {
    UI COMPONENTS
    ========================================================================== */
 
-/* Theme Toggle */
-.theme-toggle {
-  -webkit-user-select: none;
-  user-select: none;
-  justify-content: center;
-  width: 1.5rem;
-  text-align: center;
-  border: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  align-items: center;
-}
-
-.theme-toggle label {
-  grid-area: 1 / 1 / 2 / 2;
-  cursor: pointer;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.theme-toggle input:checked + label {
-  opacity: 1;
-  pointer-events: all;
-}
-
 /* Social Links */
 .social-links {
   margin: 0;
@@ -321,11 +281,6 @@ h1:first-child {
 
 .pagination .pagination-list a:hover {
   background-color: #f5f5f5;
-}
-
-/* Dark mode hover state */
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .pagination .pagination-list a:hover {
-  background-color: #333;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -565,16 +520,6 @@ audio::-webkit-media-controls-panel {
   100% { transform: rotate(360deg); }
 }
 
-/* Dark mode adjustments */
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-input {
-  border-color: #404040;
-}
-
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .loading-spinner {
-  border-color: #404040;
-  border-top-color: var(--link-color);
-}
-
 @media (prefers-color-scheme: dark) {
   .search-input {
     border-color: #404040;
@@ -685,23 +630,6 @@ body:has(fieldset.theme-toggle input[value="dark"]:checked) .loading-spinner {
   border-radius: 8px;
   margin-top: 1rem;
   background-color: var(--background-color);
-}
-
-/* Dark mode adjustments */
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-result {
-  border-bottom-color: #2a2a2a;
-}
-
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-no-results,
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-error,
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .no-js-message {
-  border-color: #404040;
-}
-
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-result mark,
-body:has(fieldset.theme-toggle input[value="dark"]:checked) .search-result-excerpt mark {
-  background-color: #ffc107;
-  color: #000;
 }
 
 @media (prefers-color-scheme: dark) {
