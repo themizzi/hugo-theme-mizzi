@@ -12,50 +12,56 @@
   {{- $isRSS = .IsRSS | default false -}}
 {{- end -}}
 
+<div itemscope itemtype="https://schema.org/MusicAlbum">
 <hgroup>
-<h1>{{ $page.Title }}</h1>
+<h1 itemprop="name">{{ $page.Title }}</h1>
 {{ with $page.GetTerms "artists" }}
 <p>
     by
     {{ range $i, $artist := . -}}
-    {{- if $i -}}, {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- if $i -}}, {{ end }}<span itemprop="byArtist" itemscope itemtype="https://schema.org/MusicGroup"><a itemprop="url" href="{{ .RelPermalink }}"><span itemprop="name">{{ .Title }}</span></a></span>
     {{- end -}}
 </p>
 {{ end }}
 {{ with $page.Params.releaseDate }}
-<p>released on <time datetime="{{ . | dateFormat "2006-01-02" }}">{{ . | dateFormat "January 1, 2006" }}</time></p>
+<p>released on <time itemprop="datePublished" datetime="{{ . | dateFormat "2006-01-02" }}">{{ . | dateFormat "January 1, 2006" }}</time></p>
 {{ end }}
 </hgroup>
 <ul class="links">
     {{ range $key, $link := $page.Params.links }}
     <li>
-        <a href="{{ $link }}" target="_blank">{{ if $isRSS }}{{ partial "service-icon.html" (dict "service" $key "rss" true) }}{{ else }}{{ partial "service-icon.html" $key }}{{ end }}</a>
+        <a itemprop="sameAs" href="{{ $link }}" target="_blank">{{ if $isRSS }}{{ partial "service-icon.html" (dict "service" $key "rss" true) }}{{ else }}{{ partial "service-icon.html" $key }}{{ end }}</a>
     </li>
     {{ end }}
 </ul>
 {{ with $page.Resources.Get $page.Params.featured_image }}
-    <img src="{{ .RelPermalink }}" alt="{{ .Title }}" />
+    <img itemprop="image" src="{{ .RelPermalink }}" alt="{{ .Title }}" />
+{{ end }}
+{{ with $page.Params.description }}
+<meta itemprop="description" content="{{ . }}" />
 {{ end }}
 {{ .Content }}
 {{ with $page.Pages }}
 {{ with where . "Type" "track" }}
+<meta itemprop="numTracks" content="{{ len . }}" />
 <h2>Tracklist</h2>
 <ol class="tracks">
     {{ range $key, $track := sort . "Weight" }}
     {{ $trackNumber := printf "%02d" $track.Weight }}
-    <li value="{{ $trackNumber }}">
+    <li value="{{ $trackNumber }}" itemprop="track" itemscope itemtype="https://schema.org/MusicRecording">
+        <meta itemprop="position" content="{{ $track.Weight }}" />
         {{ with $track.Params.artists }}
             {{ range $i, $artist := . }}
             {{ $artistPage := $.Site.GetPage (printf "/artists/%s" $artist) }}
             {{ with $artistPage }}
             {{ if $i }}, {{ end }}
-            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <span itemprop="byArtist" itemscope itemtype="https://schema.org/MusicGroup"><a itemprop="url" href="{{ .RelPermalink }}"><span itemprop="name">{{ .Title }}</span></a></span>
             {{ end }}
             {{ end }}
             -
         {{ end }}
-        <span class="title">{{ $track.Title }}</span>
-        (<a href="{{ .RelPermalink }}">details</a>)
+        <span class="title" itemprop="name">{{ $track.Title }}</span>
+        (<a itemprop="url" href="{{ .RelPermalink }}">details</a>)
         {{ partial "audio.html" . }}
     </li>
     {{ end }}
@@ -92,3 +98,5 @@
 {{ end }}
 {{ end }}
 {{ end }}
+</div>
+
