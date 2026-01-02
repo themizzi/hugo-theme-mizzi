@@ -33,36 +33,87 @@
   </section>
   {{ end }}
   
-  {{ $events := ((where .Site.RegularPages "Section" "events").ByParam "doors") }}
-  {{ with where $events "Params.doors" "ge" now }}
+  {{/* Get all events and filter for upcoming ones */}}
+  {{ $allEvents := where .Site.RegularPages "Section" "events" }}
+  {{ $upcomingEvents := slice }}
+  {{ $now := now }}
+  
+  {{ range $allEvents }}
+    {{ $isUpcoming := false }}
+    
+    {{/* Check if event has a specific doors time */}}
+    {{ if .Params.doors }}
+      {{ if ge .Params.doors $now }}
+        {{ $isUpcoming = true }}
+      {{ end }}
+    {{ else if .Params.super_event_end }}
+      {{/* For multi-day events without specific doors time, check if event hasn't ended */}}
+      {{ if ge .Params.super_event_end $now }}
+        {{ $isUpcoming = true }}
+      {{ end }}
+    {{ else if .Params.super_event_start }}
+      {{/* Fallback: if only start date exists, use that */}}
+      {{ if ge .Params.super_event_start $now }}
+        {{ $isUpcoming = true }}
+      {{ end }}
+    {{ end }}
+    
+    {{ if $isUpcoming }}
+      {{/* Calculate sort date - prefer doors, fallback to super_event_start */}}
+      {{ $sortDate := .Params.doors }}
+      {{ if not $sortDate }}
+        {{ $sortDate = .Params.super_event_start }}
+      {{ end }}
+      {{ $upcomingEvents = $upcomingEvents | append (dict "Page" . "SortDate" $sortDate) }}
+    {{ end }}
+  {{ end }}
+  
+  {{/* Sort by effective date */}}
+  {{ $sortedEvents := sort $upcomingEvents "SortDate" }}
+  
+  {{ if $sortedEvents }}
   <section class="upcoming-events">
     <h2>Upcoming Appearances</h2>
     <ul class="events-list">
-      {{ range . }}
+      {{ range $sortedEvents }}
+      {{ $page := .Page }}
       <li class="event-item">
-        <a href="{{ .RelPermalink }}">
-          {{ .Params.doors | dateFormat "January 2, 2006" }}:
-          {{ if and .Params.artist (ne .Params.artist .Title) }}
-          {{ .Title }} - {{ .Params.artist }}
+        <a href="{{ $page.RelPermalink }}">
+          {{ if $page.Params.doors }}
+          {{ $page.Params.doors | dateFormat "January 2, 2006" }}:
+          {{ else if and $page.Params.super_event_start $page.Params.super_event_end }}
+          {{ $startMonth := $page.Params.super_event_start | dateFormat "January" }}
+          {{ $endMonth := $page.Params.super_event_end | dateFormat "January" }}
+          {{ $startDay := $page.Params.super_event_start | dateFormat "2" }}
+          {{ $endDay := $page.Params.super_event_end | dateFormat "2" }}
+          {{ $year := $page.Params.super_event_start | dateFormat "2006" }}
+          {{ if eq $startMonth $endMonth }}{{ $startMonth }} {{ $startDay }}-{{ $endDay }}, {{ $year }}{{ else }}{{ $startMonth }} {{ $startDay }} - {{ $endMonth }} {{ $endDay }}, {{ $year }}{{ end }} (TBA):
+          {{ else if $page.Params.super_event_start }}
+          {{ $page.Params.super_event_start | dateFormat "January 2, 2006" }} (TBA):
+          {{ end }}
+          {{ if and $page.Params.artist (ne $page.Params.artist $page.Title) }}
+          {{ $page.Title }} - {{ $page.Params.artist }}
           {{ else }}
-          {{ .Title }}
+          {{ $page.Title }}
           {{ end }}
           @ 
           {{ $locationCity := "" }}
           {{ $locationState := "" }}
           
-          {{ with .GetTerms "locations" }}
+          {{ with $page.GetTerms "locations" }}
               {{ range . }}
                   {{ $locationCity = .Params.city }}
                   {{ $locationState = .Params.state }}
               {{ end }}
           {{ else }}
-              {{ $locationCity = .Params.city }}
-              {{ $locationState = .Params.state }}
+              {{ $locationCity = $page.Params.city }}
+              {{ $locationState = $page.Params.state }}
           {{ end }}
           
           {{ if and $locationCity $locationState }}
           {{ $locationCity }}, {{ $locationState }}
+          {{ else if $page.Params.super_event_city }}
+          {{ $page.Params.super_event_city }}
           {{ end }}
         </a>
       </li>
