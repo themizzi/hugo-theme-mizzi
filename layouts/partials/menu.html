@@ -25,8 +25,7 @@
 {{- end -}}
 {{- end -}}
 <li>
-  <a {{- range $k, $v := $attrs -}} {{- with $v -}} {{- printf " %s=%q" $k $v | safeHTMLAttr -}} {{- end -}}
-    {{- end -}} title="{{ $name }}">
+  <a {{ range $k, $v := $attrs -}}{{- with $v }} {{ printf "%s=%q" $k $v | safeHTMLAttr }}{{- end -}}{{- end }} title="{{ $name }}">
     {{ with $icon }}
     <span class="icon" aria-hidden="true">{{ . }}</span>
     {{ end }}

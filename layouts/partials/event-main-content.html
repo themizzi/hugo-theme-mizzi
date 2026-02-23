@@ -34,7 +34,8 @@
 
 {{/* Festival/Super Event Information */}}
 {{ if $page.Params.super_event_name }}
-<span itemprop="superEvent" itemscope itemtype="https://schema.org/MusicEvent">
+<section itemprop="superEvent" itemscope itemtype="https://schema.org/MusicEvent">
+    <h2 class="visually-hidden">Festival details</h2>
     <link itemprop="url" href="{{ $page.Params.super_event_url }}" />
     <meta itemprop="name" content="{{ $page.Params.super_event_name }}" />
     <meta itemprop="startDate" content="{{ $page.Params.super_event_start | dateFormat "2006-01-02T15:04:05-07:00" }}" />
@@ -51,7 +52,7 @@
         {{ $startMonth }} {{ $startDay }} - {{ $endMonth }} {{ $endDay }}, {{ $year }}
     {{ end }}
     </p>
-</span>
+</section>
 {{ end }}
 
 {{/* Event Date/Time */}}
@@ -63,7 +64,8 @@
 <p>📅 <strong>ERROR: Event must have either 'doors' or 'super_event_start' field</strong></p>
 {{ end }}
 
-<span itemprop="location" itemscope itemtype="https://schema.org/MusicVenue">
+<section itemprop="location" itemscope itemtype="https://schema.org/MusicVenue">
+    <h2 class="visually-hidden">Venue details</h2>
     {{ $locationName := "" }}
     {{ $locationAddress := "" }}
     {{ $locationCity := "" }}
@@ -122,7 +124,7 @@
         {{/* No location specified - show TBA */}}
         <p>🏛️ Venue: <strong>TBA</strong>{{ if $page.Params.super_event_city }} ({{ $page.Params.super_event_city }}){{ end }}</p>
     {{ end }}
-</span>
+</section>
 {{ with $page.Params.link }}
 <p itemprop="offers" itemscope itemtype="https://schema.org/Offer">🔗 <a href="{{ . }}" target="_blank" itemprop="url">More Info</a></p>
 {{ end }}

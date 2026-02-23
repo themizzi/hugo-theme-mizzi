@@ -23,12 +23,13 @@
     <h1>{{ .Site.Title }}</h1>
   </section>
   
-  <section class="social-links-section">
+  <nav class="social-links-section">
     {{ partial "socials.html" . }}
-  </section>
+  </nav>
   
   {{ if .Content }}
-  <section class="bio-section">
+  <section class="bio-section" aria-labelledby="bio-heading">
+    <h2 id="bio-heading" class="visually-hidden">About {{ .Site.Title }}</h2>
     {{ .Content }}
   </section>
   {{ end }}
