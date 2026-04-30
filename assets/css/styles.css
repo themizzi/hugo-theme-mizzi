@@ -2,8 +2,6 @@
    CSS CUSTOM PROPERTIES & THEME SYSTEM
    ========================================================================== */
 
-/* stylelint-disable no-descending-specificity */
-
 body {
   font-family: Poppins, sans-serif;
   background-color: var(--background-color);
@@ -122,9 +120,100 @@ h1:first-child {
   margin-right: auto;
 }
 
-.container.page img {
-  width: 100%;
-  height: auto;
+/* ==========================================================================
+   UI COMPONENTS
+   ========================================================================== */
+
+/* Social Links */
+.social-links {
+  margin: 0;
+  display: inline-flex;
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+  place-content: center;
+}
+
+.social-links li {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  list-style: none;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #555;
+  font-size: 24px;
+}
+
+.social-links :where(a:hover) {
+  color: var(--link-color);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px;
+  align-items: center;
+}
+
+.pagination-list li {
+  display: flex;
+  align-items: center;
+}
+
+.pagination :where(.pagination-list a, .pagination-list a:link, .pagination-list a:visited) {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--link-color);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.pagination :where(.pagination-list a:hover) {
+  background-color: #f5f5f5;
+}
+
+@media (prefers-color-scheme: dark) {
+  body .pagination .pagination-list a:hover {
+    background-color: #333;
+  }
+}
+
+.pagination-list .current {
+  display: block;
+  padding: 8px 12px;
+  background-color: var(--link-color);
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.pagination-list .disabled {
+  display: block;
+  padding: 8px 12px;
+  color: var(--breadcrumb-active-color);
+  border-radius: 4px;
+  cursor: default;
+}
+
+.pagination-list .invisible {
+  display: block;
+  padding: 8px 12px;
+  color: transparent;
+  cursor: default;
+  pointer-events: none;
 }
 
 /* Vids Section */
@@ -161,8 +250,7 @@ h1:first-child {
   text-decoration: none;
 }
 
-.vid-card a:hover,
-.vid-card a:focus {
+.vid-card :where(a:hover, a:focus) {
   text-decoration: underline;
 }
 
@@ -172,6 +260,11 @@ h1:first-child {
   height: auto;
   border-radius: 8px;
   background-color: #000;
+}
+
+.container.page img {
+  width: 100%;
+  height: auto;
 }
 
 .vids-links {
@@ -188,8 +281,7 @@ h1:first-child {
   text-decoration: none;
 }
 
-.vids-links li a:hover,
-.vids-links li a:focus {
+.vids-links li :where(a:hover, a:focus) {
   text-decoration: underline;
 }
 
@@ -282,104 +374,6 @@ h1:first-child {
   left: -0.5rem;
   z-index: -1;
   color: var(--breadcrumb-active-color);
-}
-
-/* ==========================================================================
-   UI COMPONENTS
-   ========================================================================== */
-
-/* Social Links */
-.social-links {
-  margin: 0;
-  display: inline-flex;
-  gap: 20px;
-  padding: 0;
-  list-style: none;
-  place-content: center;
-}
-
-.social-links li {
-  flex: 1 1 0;
-  min-width: 0;
-  text-align: center;
-  list-style: none;
-}
-
-.social-links a {
-  text-decoration: none;
-  color: #555;
-  font-size: 24px;
-}
-
-.social-links a:hover {
-  color: var(--link-color);
-}
-
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.pagination-list {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 10px;
-  align-items: center;
-}
-
-.pagination-list li {
-  display: flex;
-  align-items: center;
-}
-
-.pagination .pagination-list a,
-.pagination .pagination-list a:link,
-.pagination .pagination-list a:visited {
-  display: block;
-  padding: 8px 12px;
-  text-decoration: none;
-  color: var(--link-color);
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.pagination .pagination-list a:hover {
-  background-color: #f5f5f5;
-}
-
-@media (prefers-color-scheme: dark) {
-  body .pagination .pagination-list a:hover {
-    background-color: #333;
-  }
-}
-
-.pagination-list .current {
-  display: block;
-  padding: 8px 12px;
-  background-color: var(--link-color);
-  color: white;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.pagination-list .disabled {
-  display: block;
-  padding: 8px 12px;
-  color: var(--breadcrumb-active-color);
-  border-radius: 4px;
-  cursor: default;
-}
-
-.pagination-list .invisible {
-  display: block;
-  padding: 8px 12px;
-  color: transparent;
-  cursor: default;
-  pointer-events: none;
 }
 
 /* Contact Form */
