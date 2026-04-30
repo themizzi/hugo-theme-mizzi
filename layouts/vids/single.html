@@ -1,0 +1,26 @@
+{{ define "main" }}
+<article class="container page vids-single">
+  <h1>{{ .Title }}</h1>
+
+  {{ $poster := .Resources.GetMatch .Params.featured_image }}
+  {{ $video := .Resources.GetMatch .Params.video }}
+  {{ if $video }}
+    <video controls preload="metadata"{{ with $poster }} poster="{{ .RelPermalink }}"{{ end }}>
+      <source src="{{ $video.RelPermalink }}" type="{{ $video.MediaType.Type }}">
+      Your browser does not support the video tag.
+    </video>
+  {{ else if $poster }}
+    <img src="{{ $poster.RelPermalink }}" alt="{{ .Title }} poster">
+  {{ end }}
+
+  {{ with .Params.links }}
+  <ul class="vids-links">
+    {{ range $key, $link := . }}
+    <li><a href="{{ $link }}" target="_blank" rel="noopener noreferrer">{{ humanize $key }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+
+  {{ .Content }}
+</article>
+{{ end }}

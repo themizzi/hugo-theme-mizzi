@@ -1,0 +1,33 @@
+{{ define "main" }}
+<div class="container vids-list">
+  <h1>{{ .Title }}</h1>
+  {{ $perPage := default 10 .Params.paginateCount }}
+  {{ $sortedPages := sort .Pages "Date" "desc" }}
+  {{ $paginator := .Paginate $sortedPages $perPage }}
+
+  {{ partial "pagination.html" . }}
+
+  <div class="vids-grid">
+    {{ range $paginator.Pages }}
+      {{ $page := . }}
+      <article class="vid-card">
+        {{ $poster := $page.Resources.GetMatch $page.Params.featured_image }}
+        {{ $video := $page.Resources.GetMatch $page.Params.video }}
+        {{ if $video }}
+          <video controls preload="metadata"{{ with $poster }} poster="{{ .RelPermalink }}"{{ end }}>
+            <source src="{{ $video.RelPermalink }}" type="{{ $video.MediaType.Type }}">
+            Your browser does not support the video tag.
+          </video>
+        {{ else if $poster }}
+          <div class="vid-card-placeholder">
+            <img src="{{ $poster.RelPermalink }}" alt="{{ $page.Title }} poster">
+          </div>
+        {{ end }}
+        <h2><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h2>
+      </article>
+    {{ end }}
+  </div>
+
+  {{ partial "pagination.html" . }}
+</div>
+{{ end }}
