@@ -12,16 +12,21 @@
       {{ $page := . }}
       <article class="vid-card">
         {{ $poster := $page.Resources.GetMatch $page.Params.featured_image }}
-        {{ $video := $page.Resources.GetMatch $page.Params.video }}
-        {{ if $video }}
+        {{ with $page.Params.video }}
+          {{ $videoPath := . }}
+          {{ if not (hasPrefix . "/") }}
+            {{ $videoPath = printf "%s%s" $page.File.Dir . }}
+          {{ end }}
           <video controls preload="metadata"{{ with $poster }} poster="{{ .RelPermalink }}"{{ end }}>
-            <source src="{{ $video.RelPermalink }}" type="{{ $video.MediaType.Type }}">
+            <source src="{{ if $.Site.Params.bucket_address }}{{ $.Site.Params.bucket_address }}/{{ $videoPath }}{{ else }}/{{ $videoPath }}{{ end }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-        {{ else if $poster }}
+        {{ else }}
+          {{ with $poster }}
           <div class="vid-card-placeholder">
-            <img src="{{ $poster.RelPermalink }}" alt="{{ $page.Title }} poster">
+            <img src="{{ .RelPermalink }}" alt="{{ $page.Title }} poster">
           </div>
+          {{ end }}
         {{ end }}
         <h2><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h2>
       </article>

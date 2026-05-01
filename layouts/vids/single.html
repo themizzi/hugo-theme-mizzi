@@ -3,14 +3,19 @@
   <h1>{{ .Title }}</h1>
 
   {{ $poster := .Resources.GetMatch .Params.featured_image }}
-  {{ $video := .Resources.GetMatch .Params.video }}
-  {{ if $video }}
+  {{ with .Params.video }}
+    {{ $videoPath := . }}
+    {{ if not (hasPrefix . "/") }}
+      {{ $videoPath = printf "%s%s" $.Page.File.Dir . }}
+    {{ end }}
     <video controls preload="metadata"{{ with $poster }} poster="{{ .RelPermalink }}"{{ end }}>
-      <source src="{{ $video.RelPermalink }}" type="{{ $video.MediaType.Type }}">
+      <source src="{{ if $.Site.Params.bucket_address }}{{ $.Site.Params.bucket_address }}/{{ $videoPath }}{{ else }}/{{ $videoPath }}{{ end }}" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-  {{ else if $poster }}
-    <img src="{{ $poster.RelPermalink }}" alt="{{ .Title }} poster">
+  {{ else }}
+    {{ with $poster }}
+    <img src="{{ .RelPermalink }}" alt="{{ $.Title }} poster">
+    {{ end }}
   {{ end }}
 
   {{ with .Params.links }}
