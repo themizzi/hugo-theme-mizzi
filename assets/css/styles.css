@@ -419,6 +419,56 @@ h1:first-child {
   margin-bottom: 10px;
 }
 
+.latest-vids {
+  margin-top: 2.5rem;
+}
+
+.latest-vids h2 {
+  margin-bottom: 1.25rem;
+}
+
+.latest-vids-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.latest-vids-item {
+  width: min(100%, 220px);
+}
+
+.home-container .latest-vids-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-container .latest-vids-item img {
+  display: block;
+  height: clamp(150px, 20vw, 190px);
+  width: auto;
+  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+  background-color: #000;
+}
+
+.latest-vids-item span {
+  line-height: 1.4;
+}
+
+.latest-vids-item :where(a:hover, a:focus) {
+  text-decoration: underline;
+}
+
 /* Upcoming Events */
 .upcoming-events ul {
   list-style: none;
